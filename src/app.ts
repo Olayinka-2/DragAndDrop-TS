@@ -1,4 +1,4 @@
-// Validation function
+    // Validation function
 interface Validatable {
   value: string | number;
   required?: boolean;
@@ -6,6 +6,37 @@ interface Validatable {
   maxLength?: number;
   max?: number;
   min?: number;
+}
+
+// ProjectList class
+
+class ProjectList {
+  templateElement: HTMLTemplateElement;
+  hostElement: HTMLDivElement;
+  element: HTMLElement;
+
+  constructor(private type: "active" | "finished") {
+  this.templateElement = document.getElementById('project-list')! as HTMLTemplateElement;
+    this.hostElement = document.getElementById('app')! as HTMLDivElement;
+
+    const importedNode = document.importNode(this.templateElement.content, true);
+    this.element = importedNode.firstElementChild as HTMLElement;
+    this.element.id = `${this.type}-projects`;
+
+    this.attach();
+    this.renderContent();
+  }
+
+
+  private renderContent() {
+    const listId = `${this.type}-projects-list`;
+    this.element.querySelector('ul')!.id = listId;
+    this.element.querySelector('h2')!.textContent = this.type.toUpperCase() + " PROJECTS";
+  }
+
+  private attach() {
+    this.hostElement.insertAdjacentElement('beforeend', this.element)
+  }
 }
 
 function validate(ValidatableInput: Validatable) {
@@ -86,7 +117,7 @@ class ProjectInput {
       min: 1,
       max: 5
     }
-
+ 
     if(
       validate(titleValidatable) &&
       validate(descriptionValidatable) &&
@@ -109,10 +140,8 @@ class ProjectInput {
   private submitHandler(event: Event) {
     event.preventDefault();
     const userInput = this.gatherUserInput();
-    console.log(userInput);
     if(Array.isArray(userInput)) {
       const [title, description, people] = userInput;
-      console.log(title, description, people);
       this.clearInputs(); 
     }
   }
@@ -127,3 +156,5 @@ class ProjectInput {
 }
 
 const firstInput = new ProjectInput();
+const activePrjList = new ProjectList('active');
+const finishedPrjList = new ProjectList('finished');
