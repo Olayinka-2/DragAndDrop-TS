@@ -125,3 +125,9 @@ button:active {
   border: 1px solid #ff0062;
   background: #f7f7f7;
 }
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
